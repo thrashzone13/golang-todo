@@ -3,3 +3,4 @@
 /mongodata/
 /tmp/
 .env
+.DS_Store
