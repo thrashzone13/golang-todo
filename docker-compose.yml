@@ -1,0 +1,45 @@
+version: '3.7'
+
+services:
+    todo_app:
+        build:
+          context: .
+          dockerfile: ./Dockerfile
+        depends_on:
+            - 'todo_mongo'
+        ports:
+            - '8000:8000'
+        volumes:
+            - './:/opt/todo-app:cached'
+        networks:
+            - todo_net
+        
+    todo_mongo:
+        image: 'mongo:4.2.6-bionic'
+        hostname: todo_mongo
+        # ports:
+        #     - '57017:27017'
+        volumes:
+            - ./mongodata:/data/db
+        # environment:
+        #     - MONGO_INITDB_ROOT_USERNAME=user
+        #     - MONGO_INITDB_ROOT_PASSWORD=pass
+        #     - MONGO_INITDB_DATABASE=test
+        restart: always
+        networks:
+            - todo_net
+
+    # mongo_express:
+    #     image: mongo-express
+    #     container_name: mongo_express
+    #     depends_on:
+    #         - 'todo_mongo'
+    #     ports:
+    #         - '8081:8081'
+    #     restart: always
+    #     networks:
+    #         - todo_net
+
+networks:
+  todo_net:
+    driver: bridge
