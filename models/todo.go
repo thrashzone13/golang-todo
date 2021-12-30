@@ -1,6 +1,9 @@
 package models
 
-import "gopkg.in/mgo.v2/bson"
+import (
+	"github.com/thrashzone13/golang-todo/forms"
+	"gopkg.in/mgo.v2/bson"
+)
 
 type ToDo struct {
 	ID          bson.ObjectId `json:"_id,omitempty" bson:"_id,omitempty"`
@@ -11,6 +14,19 @@ type ToDo struct {
 
 type ToDoModel struct{}
 
-func (model ToDoModel) Add() {
+func (model ToDoModel) Create(data forms.ToDoData) error {
+
+	collection := dbConnect.Use("todos")
+
+	err := collection.Insert(bson.M{
+		"title":       data.Title,
+		"description": data.Description,
+		"is_done":     data.IsDone,
+	})
+
+	return err
+}
+
+func (model ToDoModel) Delete(id int) {
 
 }

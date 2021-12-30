@@ -1,12 +1,11 @@
 package main
 
 import (
-	"log"
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/thrashzone13/golang-todo/controllers"
+	"log"
+	"net/http"
 )
 
 func init() {
@@ -23,6 +22,10 @@ func main() {
 	v1 := router.Group("/api/v1")
 	{
 		v1.GET("/ping", controllers.PingController{}.Ping)
+		// v1.GET("/todos", controllers.ToDoController{}.Index)
+		v1.POST("/todos", controllers.ToDoController{}.Create)
+		// v1.PUT("/todos/:id", controllers.ToDoController{}.Update)
+		// v1.DELETE("/todos/:id", controllers.ToDoController{}.Delete)
 	}
 
 	router.NoRoute(func(c *gin.Context) {

@@ -2,7 +2,7 @@ package db
 
 import (
 	"gopkg.in/mgo.v2"
-	"os"
+	// "os"
 	"time"
 )
 
@@ -12,19 +12,18 @@ type DBConnection struct {
 
 // NewConnection handles connecting to a mongo database
 func NewConnection() (conn *DBConnection) {
-	info := &mgo.DialInfo{
-		// Address if its a local db then the value host=localhost
-		Addrs: []string{os.Getenv("DB_HOST")},
-		// Timeout when a failure to connect to db
-		Timeout: 60 * time.Second,
-		// Database name
-		Database: os.Getenv("DB_NAME"),
-		// Database credentials if your db is protected
-		Username: os.Getenv("DB_USERNAME"),
-		Password: os.Getenv("DB_PASSWORD"),
-	}
 
-	session, err := mgo.DialWithInfo(info)
+	session, err := mgo.DialWithInfo(&mgo.DialInfo{
+		// Address if its a local db then the value host=localhost
+		Addrs: []string{"todo_mongo"},
+		// Timeout when a failure to connect to db
+		Timeout: 10 * time.Second,
+		// Database name
+		Database: "test",
+		// Database credentials if your db is protected
+		// Username: "db",
+		// Password: "dbpass",
+	})
 
 	if err != nil {
 		panic(err)
@@ -36,9 +35,9 @@ func NewConnection() (conn *DBConnection) {
 }
 
 // Use handles connect to a certain collection
-func (conn *DBConnection) Use(dbName, tableName string) (collection *mgo.Collection) {
+func (conn *DBConnection) Use(tableName string) (collection *mgo.Collection) {
 	// This returns method that interacts with a specific collection and table
-	return conn.session.DB(dbName).C(tableName)
+	return conn.session.DB("").C(tableName)
 }
 
 // Close handles closing a database connection
