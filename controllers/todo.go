@@ -18,16 +18,14 @@ func (cntrlr ToDoController) Create(c *gin.Context) {
 
 	var data forms.ToDoData
 
-	if c.BindJSON(&data) != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": "Provide relevant fields"})
+	if err := c.BindJSON(&data); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
 		c.Abort()
 		return
 	}
 
-	err := models.ToDoModel{}.Create(data)
-
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Problem creating todo"})
+	if err := new(models.ToDoModel).Create(data); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		c.Abort()
 		return
 	}
