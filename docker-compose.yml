@@ -11,6 +11,7 @@ services:
             - '8000:8000'
         volumes:
             - './:/opt/todo-app:cached'
+        restart: unless-stopped
         networks:
             - todo_net
         
@@ -29,16 +30,18 @@ services:
         networks:
             - todo_net
 
-    # mongo_express:
-    #     image: mongo-express
-    #     container_name: mongo_express
-    #     depends_on:
-    #         - 'todo_mongo'
-    #     ports:
-    #         - '8081:8081'
-    #     restart: always
-    #     networks:
-    #         - todo_net
+    mongo_express:
+        image: mongo-express
+        container_name: mongo_express
+        depends_on:
+            - 'todo_mongo'
+        ports:
+            - '8081:8081'
+        environment:
+          - ME_CONFIG_MONGODB_SERVER=todo_mongo
+        restart: always
+        networks:
+            - todo_net
 
 networks:
   todo_net:
